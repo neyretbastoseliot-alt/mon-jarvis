@@ -32,7 +32,7 @@ if prompt := st.chat_input("Dis quelque chose à ton PiDog..."):
                 response = requests.post(
                     f"{NGROK_URL}/api/generate",
                     json={
-                        "model": "llama3",  # Modifie si tu utilises un autre modèle (ex: llama3.1)
+                        "model": "gemma:2b",  # Modifie si tu utilises un autre modèle (ex: llama3.1)
                         "prompt": prompt,
                         "stream": False
                     },
