@@ -1,39 +1,38 @@
 import streamlit as st
-from google import genai
+import requests
 
-st.set_page_config(page_title="JARVIS AI", page_icon="🤖")
-st.title("🤖 Mon Assistant JARVIS")
+st.set_page_config(page_title="JARVIS PiDog", page_icon="🤖")
+st.title("🤖 JARVIS & PiDog (Local Ollama)")
 
-# Récupération sécurisée de la clé API depuis Streamlit
-api_key = st.secrets.get("GEMINI_API_KEY")
+# Historique de conversation
+if "messages" not in st.session_state:
+    st.session_state.messages = []
 
-if not api_key:
-    st.error("⚠️ La clé API Gemini n'est pas configurée dans les paramètres !")
-else:
-    client = genai.Client(api_key=api_key)
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
 
-    if "messages" not in st.session_state:
-        st.session_state.messages = []
+if prompt := st.chat_input("Parle à ton PiDog..."):
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    with st.chat_message("user"):
+        st.markdown(prompt)
 
-    for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
-
-    if prompt := st.chat_input("Discute avec JARVIS..."):
-        st.session_state.messages.append({"role": "user", "content": prompt})
-        with st.chat_message("user"):
-            st.markdown(prompt)
-
-        with st.chat_message("assistant"):
-            with st.spinner("Réflexion..."):
-                try:
-                    response = client.models.generate_content(
-                        model="gemini-2.5-flash",
-                        contents=prompt,
-                    )
-                    answer = response.text
-                except Exception as e:
-                    answer = f"Erreur : {e}"
-
-                st.markdown(answer)
-                st.session_state.messages.append({"role": "assistant", "content": answer})
+    with st.chat_message("assistant"):
+        with st.spinner("Le PiDog réfléchit..."):
+            try:
+                # Appel à Ollama installé sur le Raspberry Pi (ou en local)
+                # Remplace "llama3" par le modèle que tu as installé sur ton Pi (ex: "mistral", "phi3", etc.)
+                response = requests.post(
+                    "http://localhost:11434/api/generate",
+                    json={
+                        "model": "llama3", 
+                        "prompt": prompt,
+                        "stream": False
+                    }
+                )
+                answer = response.json().get("response", "Erreur de réponse d'Ollama")
+            except Exception as e:
+                answer = f"Erreur de connexion à Ollama : {e}"
+            
+            st.markdown(answer)
+            st.session_state.messages.append({"role": "assistant", "content": answer})
