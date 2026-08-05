@@ -20,10 +20,9 @@ if prompt := st.chat_input("Parle à ton PiDog..."):
     with st.chat_message("assistant"):
         with st.spinner("Le PiDog réfléchit..."):
             try:
-                # Appel à Ollama installé sur le Raspberry Pi (ou en local)
-                # Remplace "llama3" par le modèle que tu as installé sur ton Pi (ex: "mistral", "phi3", etc.)
+                # Appel via le tunnel Ngrok vers ton Raspberry Pi
                 response = requests.post(
-                    "http://localhost:11434/api/generate",
+                    "https://tactile-varnish-cottage.ngrok-free.app/api/generate",
                     json={
                         "model": "llama3", 
                         "prompt": prompt,
