@@ -1,11 +1,11 @@
 import streamlit as st
 import requests
 
-st.set_page_config(page_title="JARVIS PiDog", page_icon="🤖")
-st.title("🤖 JARVIS & PiDog (IA du Raspberry Pi)")
+st.set_page_config(page_title="JARVIS", page_icon="🤖")
+st.title("🤖 JARVIS  (IA du Raspberry Pi)")
 
 # Remplace par ton adresse ngrok actuelle (sans /api/generate à la fin de la variable)
-NGROK_URL = "https://tactile-varnish-cottage.ngrok-free.app"
+NGROK_URL = "https://tactile-varnish-cottage.ngrok-free.dev"
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
