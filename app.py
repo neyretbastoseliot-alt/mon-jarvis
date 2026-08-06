@@ -29,7 +29,7 @@ if prompt := st.chat_input("Écris ton message ici..."):
                 response = requests.post(
                     f"{NGROK_URL}/api/generate",
                     json={
-                        "model": "gemma:2b",
+                        "model": "llama3.2",
                         "prompt": prompt,
                         "stream": False
                     },
